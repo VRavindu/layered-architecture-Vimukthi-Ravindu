@@ -218,7 +218,6 @@ public class ManageItemsFormController {
         btnAddNewItem.fire();
     }
 
-
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
         ItemDAOimpl itemDAOimpl = new ItemDAOimpl();
         return itemDAOimpl.existsItem(code);

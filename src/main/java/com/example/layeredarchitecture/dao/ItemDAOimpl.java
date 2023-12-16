@@ -25,7 +25,6 @@ public class ItemDAOimpl {
         return allItems;
     }
 
-
     public boolean deleteItem(String code) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
