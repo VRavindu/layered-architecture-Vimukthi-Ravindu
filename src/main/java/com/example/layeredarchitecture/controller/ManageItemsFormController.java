@@ -38,6 +38,8 @@ public class ManageItemsFormController {
     public TextField txtUnitPrice;
     public JFXButton btnAddNewItem;
 
+    ItemDAO itemDAOimpl = new ItemDAOimpl();
+
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -72,7 +74,7 @@ public class ManageItemsFormController {
         tblItems.getItems().clear();
         try {
             /*Get all items*/
-            ItemDAO itemDAOimpl = new ItemDAOimpl();
+
             ArrayList<ItemDTO> allItems = itemDAOimpl.getAllItems();
             for (ItemDTO dto : allItems){
                 tblItems.getItems().add(new ItemTM(
@@ -137,7 +139,6 @@ public class ManageItemsFormController {
             if (!existItem(code)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
             }
-            ItemDAO itemDAOimpl = new ItemDAOimpl();
             boolean isDeleted = itemDAOimpl.deleteItem(code);
 
             if (isDeleted) {
@@ -181,7 +182,6 @@ public class ManageItemsFormController {
                 }
                 //Save Item
 
-                ItemDAO itemDAOimpl = new ItemDAOimpl();
                 boolean isSaved = itemDAOimpl.saveItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
 
                 if (isSaved) {
@@ -200,8 +200,6 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
                 }
                 /*Update Item*/
-
-                ItemDAO itemDAOimpl = new ItemDAOimpl();
                 boolean isUpdated = itemDAOimpl.updateItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
@@ -220,13 +218,11 @@ public class ManageItemsFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        ItemDAO itemDAOimpl = new ItemDAOimpl();
         return itemDAOimpl.existsItem(code);
     }
 
     private String generateNewId() {
         try {
-            ItemDAO itemDAOimpl = new ItemDAOimpl();
             return itemDAOimpl.generateNewId();
 
         } catch (SQLException e) {
