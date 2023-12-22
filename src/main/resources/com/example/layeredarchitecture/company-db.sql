@@ -73,3 +73,17 @@ CREATE TABLE `OrderDetails` (
   CONSTRAINT `OrderDetails_ibfk_2` FOREIGN KEY (`itemCode`) REFERENCES `Item` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+USE company;
+
+SELECT id, name FROM Customer
+INNER JOIN Orders;
+
+SELECT o.oid, SUM(od.unitPrice * od.qty), o.date, c.id , c.name
+FROM Customer c
+RIGHT JOIN Orders o
+ON o.customerID = c.id
+LEFT JOIN OrderDetails od
+ON o.oid = od.oid
+GROUP BY o.oid, o.date, c.id, c.name
+ORDER BY o.oid;

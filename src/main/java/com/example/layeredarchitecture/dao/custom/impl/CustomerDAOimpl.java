@@ -1,14 +1,15 @@
-package com.example.layeredarchitecture.dao;
+package com.example.layeredarchitecture.dao.custom.impl;
 
-import com.example.layeredarchitecture.db.DBConnection;
+import com.example.layeredarchitecture.dao.SQLUtil;
+import com.example.layeredarchitecture.dao.custom.CustomerDAO;
 import com.example.layeredarchitecture.model.CustomerDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CustomerDAOimpl implements CustomerDAO{
+public class CustomerDAOimpl implements CustomerDAO {
     @Override
-    public ArrayList<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
+    public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
 
         ResultSet rst = SQLUtil.exucute("SELECT * FROM Customer");
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
@@ -25,23 +26,23 @@ public class CustomerDAOimpl implements CustomerDAO{
     }
 
     @Override
-    public boolean saveCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean save(CustomerDTO dto) throws SQLException, ClassNotFoundException {
         return SQLUtil.exucute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", dto.getId(), dto.getName(), dto.getAddress());
     }
 
     @Override
-    public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean update(CustomerDTO dto) throws SQLException, ClassNotFoundException {
         return SQLUtil.exucute("UPDATE Customer SET name=?, address=? WHERE id=?", dto.getName(), dto.getAddress(), dto.getId());
     }
 
     @Override
-    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean exist(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.exucute("SELECT id FROM Customer WHERE id=?", id);
         return rst.next();
     }
 
     @Override
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
         return SQLUtil.exucute("DELETE FROM Customer WHERE id=?", id);
     }
 
@@ -57,5 +58,19 @@ public class CustomerDAOimpl implements CustomerDAO{
         } else {
             return "C00-001";
         }
+    }
+
+    @Override
+    public CustomerDTO search(String id) throws SQLException, ClassNotFoundException {
+       ResultSet rst = SQLUtil.exucute("SELECT * FROM customer WHERE id=?",id);
+
+        if (rst.next()) {
+            return new CustomerDTO(
+                    rst.getString(1),
+                    rst.getString(2),
+                    rst.getString(3)
+            );
+        }
+        return null;
     }
 }

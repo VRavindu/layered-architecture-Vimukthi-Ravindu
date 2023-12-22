@@ -1,5 +1,8 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.dao.custom.QuaryDAO;
+import com.example.layeredarchitecture.dao.custom.impl.QuaryDAOimpl;
+import com.example.layeredarchitecture.model.CustomerOrderDetailsDTO;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -18,6 +21,8 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -36,7 +41,7 @@ public class MainFormController {
     private Label lblMenu;
     @FXML
     private Label lblDescription;
-
+    QuaryDAO quaryDAO = new QuaryDAOimpl();
 
     /**
      * Initializes the controller class.
@@ -120,6 +125,7 @@ public class MainFormController {
                     root = FXMLLoader.load(this.getClass().getResource("/com/example/layeredarchitecture/place-order-form.fxml"));
                     break;
                 case "imgViewOrders":
+                    printOrderDetails();
                     root = null;
                     break;
             }
@@ -136,6 +142,22 @@ public class MainFormController {
                 tt.play();
 
             }
+        }
+    }
+
+    public void printOrderDetails() {
+        try {
+            ArrayList<CustomerOrderDetailsDTO> list = quaryDAO.customerOrderDetails();
+
+            for (CustomerOrderDetailsDTO dto : list) {
+                System.out.println("Order Id: "+dto.getOrderId()+
+                        " - Order Total: "+dto.getTotal()+
+                        " - Ordered Date: "+dto.getDate()+
+                        " - Customer Id: "+dto.getId()+
+                        " - Customer Name: "+dto.getName());
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
